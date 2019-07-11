@@ -9,7 +9,7 @@ export class App extends React.Component {
     super(props);
     this.state = {
       username: "",
-      password: "aaaaaaaaa"
+      password: "ooooooooooooooooooooooooooooooooooo"
     };
   }
 
