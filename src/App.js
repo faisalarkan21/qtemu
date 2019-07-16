@@ -1,15 +1,19 @@
 import { Form, Icon, Input, Button, Checkbox } from "antd";
 import React from "react";
-import "./App.css";
+import axios from 'axios';
+import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
 import { Row, Col } from "antd";
-// import { Dashboard } from "./Dashboard";
 
-export class App extends React.Component {
+import "./App.css";
+import { postLogin } from "./actions/auth";
+// import { Dashboard } from "./Dashboard";
+ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "test6",
-      password: "ooooooooooooooooooooooooooooooooooo"
+      username: "",
+      password: ""
     };
   }
 
@@ -25,17 +29,14 @@ export class App extends React.Component {
   };
 
   handleSubmit = () => {
-    console.log("this.state.username", this.state.username);
-    if (this.state.username === "" || this.state.password === "") {
-      alert("Harap isi username dan password");
-    } else {
-      alert(
-        `Username = ${this.state.username}, Password = ${this.state.password}`
-      );
-    }
-  };
+
+    this.props.dispatch(postLogin({username: this.state.username, password: this.state.password}))
+
+   };
 
   render() {
+
+    console.log('this.props', this.props)
     return (
       <Row
         type="flex"
@@ -90,3 +91,15 @@ export class App extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    isFetching: state.auth.isFetching,
+    isAuthenticated: state.auth.isAuthenticated,
+    errorMessage: state.auth.errorMessage,
+    dataAuth: state.auth.data,
+    logOut: state.logOut,
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(App));

@@ -1,82 +1,58 @@
 import React from "react";
-import {App} from './App'; 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Provider } from "react-redux";
+import configureStore from "../src/store/configureStore";
+import App from "./App";
+import { LayoutDashboard } from "./component/Layout";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from "react-router-dom";
+import { Layout, Menu, Breadcrumb, Icon } from "antd";
+const { Header, Content, Footer, Sider } = Layout;
+const { SubMenu } = Menu;
 
-function BasicExample() {
+const PrivateRoute = ({ component, isAuthenticated, ...rest }) => {
+  console.log('rest', rest)
   return (
-    <Router>
-      {/* <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/topics">Topics</Link>
-          </li>
-        </ul>
-
-        <hr /> */}
-
-        <Route exact path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/topics" component={App} />
-      {/* </div> */}
-    </Router>
+    // eslint-disable-line
+    <Route
+      {...rest}
+      render={props =>
+        false ? (
+          React.createElement(component, props)
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location } // eslint-disable-line
+            }}
+          />
+        )
+      }
+    />
   );
-}
+};
 
-function Home() {
-  return (  
-    <div>
-        <Link to="/topics">Home</Link>  
-    </div>
-  );
-}
+const store = configureStore();
 
-function About() {
-  return (
-    <div>
-      {/* <h2>About</h2> */}
-    
-    </div>
-  );
-}
-
-function Topics({ match }) {
-  return (
-    <div>
-      <h2>Topics</h2>
-      <ul>
-        <li>
-          <Link to={`${match.url}/rendering`}>Rendering with React</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/components`}>Components</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
-        </li>
-      </ul>
-
-      <Route path={`${match.path}/:topicId`} component={Topic} />
-      <Route
-        exact
-        path={match.path}
-        render={() => <h3>Please select a topic.</h3>}
-      />
-    </div>
-  );
-}
-
-function Topic({ match }) {
-  return (
-    <div>
-      <h3>{match.params.topicId}</h3>
-    </div>
-  );
+class BasicExample extends React.Component {
+  render() {
+    return (
+      <div>
+        <Provider store={store}>
+          <Router>
+            <Switch>
+              <Route exact path="/login" component={App} />
+              <PrivateRoute path="/" component={LayoutDashboard} />
+            </Switch>
+          </Router>
+        </Provider>
+      </div>
+    );
+  }
 }
 
 export default BasicExample;
