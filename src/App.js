@@ -28,6 +28,18 @@ import { postLogin } from "./actions/auth";
     });
   };
 
+  componentWillReceiveProps(nextProps){
+    console.log('nextprops', nextProps)
+
+    const {dataAuth: {isValid}} = nextProps
+    if (this.props !== nextProps){
+      console.log('isValid', isValid)
+      if (isValid){
+        this.props.history.push('/')
+      }
+    }
+  }
+
   handleSubmit = () => {
 
     this.props.dispatch(postLogin({username: this.state.username, password: this.state.password}))

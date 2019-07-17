@@ -21,7 +21,7 @@ const PrivateRoute = ({ component, isAuthenticated, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        false ? (
+        true ? (
           React.createElement(component, props)
         ) : (
           <Redirect
@@ -53,6 +53,6 @@ class BasicExample extends React.Component {
       </div>
     );
   }
-}
+} 
 
 export default BasicExample;
